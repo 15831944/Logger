@@ -29,5 +29,9 @@ int main()
 	filelogger.log(thatboy::logger::LogLevel::Info, "THIS WON'T BE WRITTEN.");
 
 	thatboy::logger::log(thatboy::logger::FileLogger("log.txt"), thatboy::logger::LogLevel::Info, "This is file logger &&.");
+
+	thatboy::logger::log(thatboy::logger::Logger(std::clog), thatboy::logger::LogLevel::Info, "This is clog logger (g).");
+	thatboy::logger::Logger(std::clog).log(thatboy::logger::LogLevel::Info, "This is clog logger.");
+
 	return 0;
 }
