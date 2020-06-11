@@ -70,11 +70,18 @@ namespace __hide_namespace__
 	}
 
 	struct Logger;
+	struct FileLogger;
 	void _log_args_(std::ostream&);
 	template<typename T, typename ...Arg>
 	void _log_args_(std::ostream&, const T& t, const Arg&...);
 	template <typename ...Arg>
 	void log(Logger&, const Arg&...);
+	template <typename ...Arg>
+	void log(Logger&&, const Arg&...);
+	template <typename ...Arg>
+	void log(FileLogger&, const Arg&...);
+	template <typename ...Arg>
+	void log(FileLogger&&, const Arg&...);
 
 	// Final
 	void _log_args_(std::ostream& logger)
@@ -106,6 +113,10 @@ namespace __hide_namespace__
 		friend void log(Logger&, const Arg&...);
 		template <typename ...Arg>
 		friend void log(Logger&&, const Arg&...);
+
+		/// <summary>
+		/// Log
+		/// </summary>
 		template <typename ...Arg>
 		void log(const Arg&... args)
 		{
@@ -190,6 +201,10 @@ namespace __hide_namespace__
 		friend void log(FileLogger&, const Arg&...);
 		template <typename ...Arg>
 		friend void log(FileLogger&&, const Arg&...);
+
+		/// <summary>
+		/// Log
+		/// </summary>
 		template <typename ...Arg>
 		void log(const Arg&... args)
 		{
@@ -208,6 +223,7 @@ namespace __hide_namespace__
 		std::lock_guard<std::mutex> lock(logger);
 		_log_args_(*logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
 	}
+
 	/// <summary>
 	/// Log
 	/// </summary>
@@ -220,6 +236,9 @@ namespace __hide_namespace__
 		_log_args_(*logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
 	}
 
+	/// <summary>
+	/// Log
+	/// </summary>
 	template<typename ...Arg>
 	void log(FileLogger& logger, const Arg& ...args)
 	{
