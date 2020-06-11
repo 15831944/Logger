@@ -52,6 +52,9 @@ logger.log(thatboy::logger::LogLevel::Info, "THIS WON'T BE WRITTEN.");
 
 std::ofstream ofs3("log.txt", std::ios::app);
 thatboy::logger::log(thatboy::logger::Logger(ofs3), thatboy::logger::LogLevel::Info, "This is ofstream logger &&.");
+
+thatboy::logger::log(thatboy::logger::Logger(std::clog), thatboy::logger::LogLevel::Info, "This is clog logger (g).");
+	thatboy::logger::Logger(std::clog).log(thatboy::logger::LogLevel::Info, "This is clog logger.");
 ```
 
 ### FileLogger
