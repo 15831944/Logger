@@ -95,12 +95,17 @@ namespace __hide_namespace__
 		: protected std::mutex
 	{
 	protected:
-		std::ostream& os;
+		std::ostream* os = nullptr;
 	public:
-		Logger(std::ostream& os_) :os(os_) {}
+		Logger() = default;
+		Logger(std::ostream& os_) :os(&os_) {}
+		void bind(std::ostream& os_) { os = &os_; }
+		void unbind() { os = nullptr; }
 
 		template <typename ...Arg>
 		friend void log(Logger&, const Arg&...);
+		template <typename ...Arg>
+		friend void log(Logger&&, const Arg&...);
 		template <typename ...Arg>
 		void log(const Arg&... args)
 		{
@@ -198,13 +203,28 @@ namespace __hide_namespace__
 	template <typename ...Arg>
 	void log(Logger& logger, const Arg&... args)
 	{
+		if (logger.os == nullptr || logger.os->fail())
+			return;
 		std::lock_guard<std::mutex> lock(logger);
-		_log_args_(logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
+		_log_args_(*logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
+	}
+	/// <summary>
+	/// Log
+	/// </summary>
+	template <typename ...Arg>
+	void log(Logger&& logger, const Arg&... args)
+	{
+		if (logger.os == nullptr || logger.os->fail())
+			return;
+		std::lock_guard<std::mutex> lock(logger);
+		_log_args_(*logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
 	}
 
 	template<typename ...Arg>
 	void log(FileLogger& logger, const Arg& ...args)
 	{
+		if (!logger.os)
+			return;
 		std::lock_guard<std::mutex> lock(logger);
 		_log_args_(logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
 	}
@@ -215,6 +235,8 @@ namespace __hide_namespace__
 	template <typename ...Arg>
 	void log(FileLogger&& logger, const Arg&... args)
 	{
+		if (!logger.os)
+			return;
 		std::lock_guard<std::mutex> lock(logger);
 		_log_args_(logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
 	}

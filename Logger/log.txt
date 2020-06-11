@@ -1,15 +1,8 @@
-2020-6-10 20:43:22 hello world 你好，世界 
-2020-6-10 20:48:34 hello world 你好，世界 
-2020-6-11 08:45:30 hello world 你好，世界 
-2020-6-11 08:45:38 hello world 你好，世界 
-2020-6-11 08:49:09 hello world 你好，世界 
-2020-6-11 08:49:09 测试Log233
-2020-6-11 08:49:18 hello world 你好，世界 
-2020-6-11 08:49:18 测试Log233
-2020-6-11 08:49:34 hello world 你好，世界 
-2020-6-11 08:49:34 测试Log233
-2020-6-11 08:51:32 hello world 你好，世界 
-2020-6-11 08:51:32 测试Log233
-2020-6-11 08:52:21 hello world 你好，世界 
-2020-6-11 08:52:21 测试Log &233
-2020-6-11 08:52:21 测试Log &&233
+2020-6-11 09:24:44  [INFO] This is ofstream logger.
+2020-6-11 09:24:44  [INFO] This is ofstream logger (g).
+2020-6-11 09:24:44  [INFO] This is ofstream logger -- again.
+2020-6-11 09:24:44  [INFO] This is ofstream logger -- again again.
+2020-6-11 09:24:44  [INFO] This is ofstream logger &&.
+2020-6-11 09:24:44  [INFO] This is file logger.
+2020-6-11 09:24:44  [INFO] This is file logger (g).
+2020-6-11 09:24:44  [INFO] This is file logger &&.
