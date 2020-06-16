@@ -2,7 +2,11 @@
 
 int main()
 {
+	int a;
+	scanf("%d", &a);
 	std::ofstream ofs("log.txt", std::ios::app);
+	thatboy::logger::log(std::clog, "ddd");
+
 	thatboy::logger::Logger logger(ofs);
 	logger.log(thatboy::logger::LogLevel::Info, "This is ofstream logger.");
 	thatboy::logger::log(logger, thatboy::logger::LogLevel::Info, "This is ofstream logger (g).");

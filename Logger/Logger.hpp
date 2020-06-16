@@ -327,6 +327,17 @@ namespace {
 		/// <summary>
 		/// Log
 		/// </summary>
+		template<typename ...Arg>
+		[[deprecated("This argument [logger_os] of this function may be NOT THREAD SAFE. Consider using scanf_s instead. ")]]
+		void log(std::ostream& logger_os, const Arg& ...args)
+		{
+			_log_args_(logger_os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
+		}
+
+
+		/// <summary>
+		/// Log
+		/// </summary>
 		template <typename ...Arg>
 		void log(FileLogger&& logger, const Arg&... args)
 		{
