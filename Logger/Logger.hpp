@@ -169,7 +169,7 @@ namespace {
 		}
 
 		/// <summary>
-		/// Logger
+		/// Logger, with mutex
 		/// </summary>
 		struct Logger
 			: protected std::mutex
@@ -197,6 +197,9 @@ namespace {
 			}
 		};
 
+		/// <summary>
+		/// FileLogger, with mutex
+		/// </summary>
 		struct FileLogger
 			: protected std::mutex
 		{
@@ -334,6 +337,7 @@ namespace {
 		}
 	}
 }
+
 /// <summary>
 /// Write Everywhere, Read Nowhere
 /// </summary>
@@ -341,6 +345,7 @@ namespace thatboy
 {
 	/// <summary>
 	/// For better logger
+	/// [thread-safe]
 	/// </summary>
 	namespace logger
 	{
