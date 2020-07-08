@@ -145,7 +145,7 @@ namespace {
 #endif // !_CRT_SECURE_NO_WARNINGS
 		}
 
-		struct Logger;
+		struct StreamLogger;
 		struct FileLogger;
 		struct FileNELogger;
 
@@ -153,9 +153,9 @@ namespace {
 		template<typename T, typename ...Arg>
 		void _log_args_(std::ostream&, const T& t, const Arg&...);
 		template <typename ...Arg>
-		void log(Logger&, const Arg&...);
+		void log(StreamLogger&, const Arg&...);
 		template <typename ...Arg>
-		void log(Logger&&, const Arg&...);
+		void log(StreamLogger&&, const Arg&...);
 		template <typename ...Arg>
 		void log(FileLogger&, const Arg&...);
 		template <typename ...Arg>
@@ -174,16 +174,16 @@ namespace {
 		}
 
 		/// <summary>
-		/// Logger, with mutex
+		/// StreamLogger, with mutex
 		/// </summary>
-		struct Logger
+		struct StreamLogger
 			: protected std::mutex
 		{
 		protected:
 			std::ostream* os = nullptr;
 		public:
-			Logger() = default;
-			Logger(std::ostream& os_) :os(&os_) {}
+			StreamLogger() = default;
+			StreamLogger(std::ostream& os_) :os(&os_) {}
 			void bind(std::ostream& os_) { os = &os_; }
 			void unbind() { os = nullptr; }
 
@@ -337,7 +337,7 @@ namespace {
 		/// Log
 		/// </summary>
 		template <typename ...Arg>
-		void log(Logger& logger, const Arg&... args)
+		void log(StreamLogger& logger, const Arg&... args)
 		{
 			if (logger.os == nullptr || logger.os->fail())
 				return;
@@ -349,7 +349,7 @@ namespace {
 		/// Log
 		/// </summary>
 		template <typename ...Arg>
-		void log(Logger&& logger, const Arg&... args)
+		void log(StreamLogger&& logger, const Arg&... args)
 		{
 			if (logger.os == nullptr || logger.os->fail())
 				return;
@@ -416,7 +416,7 @@ namespace thatboy
 		using __hide_namespace__::log;
 		using __hide_namespace__::item::FunctionalInfo;
 		using __hide_namespace__::item::LogLevel;
-		using __hide_namespace__::Logger;
+		using __hide_namespace__::StreamLogger;
 		using __hide_namespace__::FileLogger;
 		using __hide_namespace__::FileNELogger;
 		using namespace __hide_namespace__::code_cast;
