@@ -3,7 +3,7 @@
 int main()
 {
 	std::ofstream ofs("log.txt", std::ios::app);
-	thatboy::logger::Logger logger(ofs);
+	thatboy::logger::StreamLogger logger(ofs);
 	logger.log("test logger");
 	ofs.close();
 	logger.log("test logger on close");

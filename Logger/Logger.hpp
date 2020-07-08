@@ -188,9 +188,9 @@ namespace {
 			void unbind() { os = nullptr; }
 
 			template <typename ...Arg>
-			friend void log(Logger&, const Arg&...);
+			friend void log(StreamLogger&, const Arg&...);
 			template <typename ...Arg>
-			friend void log(Logger&&, const Arg&...);
+			friend void log(StreamLogger&&, const Arg&...);
 
 			/// <summary>
 			/// Log

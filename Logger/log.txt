@@ -1,0 +1,5 @@
+[2020-7-8 19:18:33] test logger
+0[2020-7-8 19:18:33] test logger reopen
+[2020-7-8 19:18:33] test filelogger
+[2020-7-8 19:18:33] test filelogger reopen
+[2020-7-8 19:18:33] test fileNelogger
