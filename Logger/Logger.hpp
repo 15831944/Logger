@@ -43,7 +43,7 @@ namespace {
 			/// </summary>
 			enum class FunctionalInfo
 			{
-				Time
+				Time = -1
 			};
 
 			std::ostream& operator<<(std::ostream& logger, const FunctionalInfo& func)
@@ -55,14 +55,14 @@ namespace {
 					tm tm;
 					time_t timeStamp = time(nullptr);
 					localtime_s(&tm, &timeStamp);
-					return logger << tm.tm_year + 1900 << '-' << tm.tm_mon + 1 << '-' << tm.tm_mday << ' '
+					return logger << '[' << tm.tm_year + 1900 << '-' << tm.tm_mon + 1 << '-' << tm.tm_mday << ' '
 						<< std::setfill('0')
 						<< std::setw(2) << tm.tm_hour
 						<< ':'
 						<< std::setw(2) << tm.tm_min
 						<< ':'
 						<< std::setw(2) << tm.tm_sec
-						<< ' ';
+						<< "] ";
 				}
 				default:
 					break;
@@ -73,6 +73,7 @@ namespace {
 
 		namespace code_cast
 		{
+#ifdef _CRT_SECURE_NO_WARNINGS
 			std::string UnicodeToUTF8(const std::wstring& wstr)
 			{
 				std::string ret;
@@ -140,10 +141,14 @@ namespace {
 			{
 				return UnicodeToUTF8(ANSIToUnicode(str));
 			}
+
+#endif // !_CRT_SECURE_NO_WARNINGS
 		}
 
 		struct Logger;
 		struct FileLogger;
+		struct FileNELogger;
+
 		void _log_args_(std::ostream&);
 		template<typename T, typename ...Arg>
 		void _log_args_(std::ostream&, const T& t, const Arg&...);
@@ -289,6 +294,46 @@ namespace {
 		};
 
 		/// <summary>
+		/// FileNELogger
+		/// </summary>
+		struct FileNELogger
+		{
+		protected:
+			std::string fileName;
+		public:
+			FileNELogger() = default;
+			FileNELogger(const std::string& file) :fileName(file) {}
+			void bind(const std::string& file) { fileName = file; }
+			void unbind() { fileName.clear(); }
+
+			template <typename ...Arg>
+			friend void log(FileNELogger&, const Arg&...);
+			template <typename ...Arg>
+			friend void log(FileNELogger&&, const Arg&...);
+
+			/// <summary>
+			/// Log
+			/// </summary>
+			template <typename ...Arg>
+			void log(const Arg&... args)
+			{
+				__hide_namespace__::log(*this, std::forward<const Arg&>(args)...);
+			}
+		};
+
+
+
+		/// <summary>
+		/// Log
+		/// </summary>
+		template<typename ...Arg>
+		[[deprecated("This argument [logger_os] of this function may be NOT THREAD SAFE. Consider using scanf_s instead. ")]]
+		void log(std::ostream& logger_os, const Arg& ...args)
+		{
+			_log_args_(logger_os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
+		}
+
+		/// <summary>
 		/// Log
 		/// </summary>
 		template <typename ...Arg>
@@ -318,22 +363,11 @@ namespace {
 		template<typename ...Arg>
 		void log(FileLogger& logger, const Arg& ...args)
 		{
-			if (!logger.os)
+			if (!logger.os.is_open())
 				return;
 			std::lock_guard<std::mutex> lock(logger);
 			_log_args_(logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
 		}
-
-		/// <summary>
-		/// Log
-		/// </summary>
-		template<typename ...Arg>
-		[[deprecated("This argument [logger_os] of this function may be NOT THREAD SAFE. Consider using scanf_s instead. ")]]
-		void log(std::ostream& logger_os, const Arg& ...args)
-		{
-			_log_args_(logger_os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
-		}
-
 
 		/// <summary>
 		/// Log
@@ -341,10 +375,29 @@ namespace {
 		template <typename ...Arg>
 		void log(FileLogger&& logger, const Arg&... args)
 		{
-			if (!logger.os)
+			if (!logger.os.is_open())
 				return;
 			std::lock_guard<std::mutex> lock(logger);
 			_log_args_(logger.os, item::FunctionalInfo::Time, std::forward<const Arg&>(args)...);
+		}
+
+
+		/// <summary>
+		/// Log
+		/// </summary>
+		template <typename ...Arg>
+		void log(FileNELogger& logger, const Arg&... args)
+		{
+			return FileLogger(logger.fileName.c_str()).log(std::forward<const Arg&>(args)...);
+		}
+
+		/// <summary>
+		/// Log
+		/// </summary>
+		template <typename ...Arg>
+		void log(FileNELogger&& logger, const Arg&... args)
+		{
+			return FileLogger(logger.fileName.c_str()).log(std::forward<const Arg&>(args)...);
 		}
 	}
 }
@@ -365,6 +418,7 @@ namespace thatboy
 		using __hide_namespace__::item::LogLevel;
 		using __hide_namespace__::Logger;
 		using __hide_namespace__::FileLogger;
+		using __hide_namespace__::FileNELogger;
 		using namespace __hide_namespace__::code_cast;
 	}
 }

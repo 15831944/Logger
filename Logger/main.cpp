@@ -2,40 +2,25 @@
 
 int main()
 {
-	int a;
-	scanf("%d", &a);
 	std::ofstream ofs("log.txt", std::ios::app);
-	thatboy::logger::log(std::clog, "ddd");
-
 	thatboy::logger::Logger logger(ofs);
-	logger.log(thatboy::logger::LogLevel::Info, "This is ofstream logger.");
-	thatboy::logger::log(logger, thatboy::logger::LogLevel::Info, "This is ofstream logger (g).");
+	logger.log("test logger");
 	ofs.close();
-	logger.log(thatboy::logger::LogLevel::Info, "THIS WON'T BE WRITTEN.");
+	logger.log("test logger on close");
 	ofs.open("log.txt", std::ios::app);
-	logger.log(thatboy::logger::LogLevel::Info, "This is ofstream logger -- again.");
+	logger.log("test logger reopen");
 	ofs.close();
 
-	std::ofstream ofs2("log.txt", std::ios::app);
-	logger.bind(ofs2);
-	logger.log(thatboy::logger::LogLevel::Info, "This is ofstream logger -- again again.");
-	ofs2.close();
-	logger.unbind();
-	logger.log(thatboy::logger::LogLevel::Info, "THIS WON'T BE WRITTEN.");
-
-	std::ofstream ofs3("log.txt", std::ios::app);
-	thatboy::logger::log(thatboy::logger::Logger(ofs3), thatboy::logger::LogLevel::Info, "This is ofstream logger &&.");
-
-	thatboy::logger::log(thatboy::logger::Logger(std::clog), thatboy::logger::LogLevel::Info, "This is clog logger (g).");
-	thatboy::logger::Logger(std::clog).log(thatboy::logger::LogLevel::Info, "This is clog logger.");
-
-	thatboy::logger::FileLogger filelogger("log.txt");
-	filelogger.log(thatboy::logger::LogLevel::Info, "This is file logger.");
-	thatboy::logger::log(filelogger, thatboy::logger::LogLevel::Info, "This is file logger (g).");
-	filelogger.close();
-	filelogger.log(thatboy::logger::LogLevel::Info, "THIS WON'T BE WRITTEN.");
-
-	thatboy::logger::log(thatboy::logger::FileLogger("log.txt"), thatboy::logger::LogLevel::Info, "This is file logger &&.");
+	thatboy::logger::FileLogger fileLogger("log.txt");
+	fileLogger.log("test filelogger");
+	fileLogger.close();
+	fileLogger.log("test filelogger on close");
+	fileLogger.open("log.txt");
+	fileLogger.log("test filelogger reopen");
+	fileLogger.close();	
+	
+	thatboy::logger::FileNELogger fileNeLogger("log.txt");
+	fileNeLogger.log("test fileNelogger");
 
 	return 0;
 }
